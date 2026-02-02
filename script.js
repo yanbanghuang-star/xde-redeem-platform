@@ -1010,14 +1010,14 @@ function generateProfileContent() {
 }
 
 // 兑换产品功能.
-// 飞书多维表格配置（使用环境变量或配置文件管理敏感信息）
+// 飞书多维表格配置
 const FEISHU_CONFIG = {
     // 飞书开放平台应用凭证
-    APP_ID: process.env.FEISHU_APP_ID || 'your_app_id',
-    APP_SECRET: process.env.FEISHU_APP_SECRET || 'your_app_secret',
+    APP_ID: 'your_app_id',
+    APP_SECRET: 'your_app_secret',
     // 多维表格信息
-    SPREADSHEET_TOKEN: process.env.FEISHU_SPREADSHEET_TOKEN || 'your_spreadsheet_token',
-    SHEET_ID: process.env.FEISHU_SHEET_ID || 'your_sheet_id'
+    SPREADSHEET_TOKEN: 'your_spreadsheet_token',
+    SHEET_ID: 'your_sheet_id'
 };
 
 // 获取飞书访问令牌
@@ -1292,3 +1292,52 @@ async function fetchFromMockAPI(endpoint) {
         return { success: false, error: 'Failed to fetch data' };
     }
 }
+
+// 初始化滚动动画
+function initScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+    
+    // 观察所有需要滚动动画的元素
+    document.querySelectorAll('.scroll-reveal').forEach(el => {
+        observer.observe(el);
+    });
+    
+    // 初始检查
+    setTimeout(() => {
+        observer.disconnect();
+        document.querySelectorAll('.scroll-reveal').forEach(el => {
+            el.classList.add('revealed');
+        });
+    }, 100);
+}
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', function() {
+    // 初始化滚动动画
+    initScrollAnimations();
+    
+    // 添加滚动监听
+    window.addEventListener('scroll', function() {
+        // 导航栏滚动效果
+        const navbar = document.getElementById('navbar');
+        if (navbar) {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        }
+    });
+});
