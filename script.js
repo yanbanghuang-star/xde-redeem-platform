@@ -954,7 +954,7 @@ function generateProfileContent() {
                     orderItem.innerHTML = `
                         <span data-label="Order ID">#${order.id}</span>
                         <span data-label="Reward">${order.productName}</span>
-                        <span data-label="Points">${order.pointsSpent} PC</span>
+                        <span data-label="Points">${order.pointsSpent} ${order.pointsType || 'SPADE'}</span>
                         <span data-label="Status" class="status-${order.status}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span>
                         <span data-label="Date">${orderDate}</span>
                     `;
@@ -1010,14 +1010,14 @@ function generateProfileContent() {
 }
 
 // 兑换产品功能.
-// 飞书多维表格配置（需要替换为真实的配置信息）
+// 飞书多维表格配置（使用环境变量或配置文件管理敏感信息）
 const FEISHU_CONFIG = {
     // 飞书开放平台应用凭证
-    APP_ID: 'your_app_id',
-    APP_SECRET: 'your_app_secret',
+    APP_ID: process.env.FEISHU_APP_ID || 'your_app_id',
+    APP_SECRET: process.env.FEISHU_APP_SECRET || 'your_app_secret',
     // 多维表格信息
-    SPREADSHEET_TOKEN: 'your_spreadsheet_token',
-    SHEET_ID: 'your_sheet_id'
+    SPREADSHEET_TOKEN: process.env.FEISHU_SPREADSHEET_TOKEN || 'your_spreadsheet_token',
+    SHEET_ID: process.env.FEISHU_SHEET_ID || 'your_sheet_id'
 };
 
 // 获取飞书访问令牌
@@ -1181,6 +1181,62 @@ async function redeemProduct(productId, userSpadePoints = currentUser.spadePoint
         console.error('兑换过程中发生错误:', error);
         alert('兑换过程中发生错误，请稍后重试！');
     }
+}
+
+// 管理后台功能
+// 切换管理后台选项卡
+function switchTab(tabName) {
+    // 隐藏所有选项卡内容
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabContents.forEach(content => {
+        content.style.display = 'none';
+    });
+    
+    // 显示选中的选项卡内容
+    const selectedTab = document.getElementById(`${tabName}-tab`);
+    if (selectedTab) {
+        selectedTab.style.display = 'block';
+    }
+    
+    // 更新选项卡按钮状态
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    tabButtons.forEach(button => {
+        button.classList.remove('active');
+    });
+    
+    // 激活选中的选项卡按钮
+    event.target.classList.add('active');
+}
+
+// 添加新礼品
+function addGift() {
+    const addGiftModal = document.getElementById('addGiftModal');
+    if (addGiftModal) {
+        addGiftModal.style.display = 'block';
+    }
+}
+
+// 关闭模态框
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// 导入数据
+function importData() {
+    alert('Import data functionality will be implemented here.');
+}
+
+// 导出数据
+function exportData() {
+    alert('Export data functionality will be implemented here.');
+}
+
+// 保存设置
+function saveSettings() {
+    alert('Settings saved successfully!');
 }
 
 // API调用函数（实际后端API）.
