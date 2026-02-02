@@ -5,8 +5,7 @@ const users = [
     name: 'Test User',
     email: 'test.user@bytedance.com',
     xdeId: 'XDE001',
-    pcPoints: 150,
-    bpPoints: 250,
+    spadePoints: 15,
     completedTraining: true,
     createdAt: new Date('2025-01-15').toISOString(),
     profile: {
@@ -22,8 +21,7 @@ const users = [
     name: 'Alice Smith',
     email: 'alice.smith@bytedance.com',
     xdeId: 'XDE002',
-    pcPoints: 200,
-    bpPoints: 300,
+    spadePoints: 20,
     completedTraining: true,
     createdAt: new Date('2025-02-20').toISOString(),
     profile: {
@@ -39,8 +37,7 @@ const users = [
     name: 'Bob Johnson',
     email: 'bob.johnson@bytedance.com',
     xdeId: 'XDE003',
-    pcPoints: 50,
-    bpPoints: 100,
+    spadePoints: 5,
     completedTraining: false,
     createdAt: new Date('2025-03-10').toISOString(),
     profile: {
@@ -56,8 +53,7 @@ const users = [
     name: 'Carol Williams',
     email: 'carol.williams@bytedance.com',
     xdeId: 'XDE004',
-    pcPoints: 250,
-    bpPoints: 400,
+    spadePoints: 25,
     completedTraining: true,
     createdAt: new Date('2025-04-05').toISOString(),
     profile: {
@@ -70,14 +66,14 @@ const users = [
   }
 ];
 
-// Mock products data with PC points requirement and stock.
+// Mock products data with SPADE Points requirement and stock.
 const products = [
   {
     id: 'prod1',
-    name: 'Sticker Set',
-    brand: 'xDE',
-    description: 'XDE 主题贴纸套装',
-    pcPoints: 20,
+    name: 'Blind Box Stickers Set',
+    brand: 'SPADE',
+    description: 'SPADE 主题盲盒贴纸套装',
+    spadePoints: 2,
     stock: 100,
     imageUrl: 'images/image.png',
     category: 'stationery',
@@ -86,22 +82,10 @@ const products = [
   },
   {
     id: 'prod2',
-    name: 'Blink box with soft toy',
-    brand: 'ByteDance',
-    description: '猫头鹰盲盒毛绒玩具套装',
-    pcPoints: 50,
-    stock: 400,
-    imageUrl: 'images/image (1).png',
-    category: 'toys',
-    popularity: 95,
-    createdAt: new Date('2025-01-01').toISOString()
-  },
-  {
-    id: 'prod3',
-    name: 'Lanyard with ID Sleeve',
-    brand: 'xDE',
-    description: 'XDE 主题挂绳卡套',
-    pcPoints: 25,
+    name: 'Lanyard With ID Sleeve',
+    brand: 'SPADE',
+    description: 'SPADE 主题挂绳卡套',
+    spadePoints: 2,
     stock: 100,
     imageUrl: 'images/image (2).png',
     category: 'accessories',
@@ -109,11 +93,11 @@ const products = [
     createdAt: new Date('2025-01-01').toISOString()
   },
   {
-    id: 'prod4',
+    id: 'prod3',
     name: 'Tote Bag',
-    brand: 'ByteDance',
-    description: 'XDE 主题帆布手提袋',
-    pcPoints: 40,
+    brand: 'SPADE',
+    description: 'SPADE 主题帆布手提袋',
+    spadePoints: 3,
     stock: 100,
     imageUrl: 'images/image (3).png',
     category: 'bags',
@@ -121,19 +105,53 @@ const products = [
     createdAt: new Date('2025-01-01').toISOString()
   },
   {
-    id: 'prod5',
-    name: 'Premium Travel Cup',
-    brand: 'xDE',
-    description: '高品质保温杯，XDE 主题设计',
-    pcPoints: 45,
+    id: 'prod4',
+    name: 'Water Cup',
+    brand: 'SPADE',
+    description: 'SPADE 主题保温杯，高品质设计',
+    spadePoints: 3,
     stock: 100,
     imageUrl: 'images/image (4).png',
     category: 'daily',
     popularity: 80,
     createdAt: new Date('2025-01-01').toISOString()
   },
-  { id: 'prod6', name: 'Hoodie (Popular)', brand: 'ByteDance', description: 'XDE 主题连帽衫，高品质舒适面料', pcPoints: 80, stock: 100, imageUrl: 'images/img_v3_02t1_cad0b75f-282a-44ab-9e1c-7997b7d188cg.jpg', category: 'clothing', popularity: 100, createdAt: new Date('2025-01-01').toISOString() },
-  { id: 'prod7', name: 'Power bank', brand: 'xDE', description: 'XDE 主题移动电源，大容量设计', pcPoints: 60, stock: 100, imageUrl: 'images/44534a32e412180cff401b0c7d865744.jpg', category: 'electronics', popularity: 95, createdAt: new Date('2025-01-01').toISOString() }
+  {
+    id: 'prod5',
+    name: 'Owl Blind Box',
+    brand: 'SPADE',
+    description: 'SPADE 主题猫头鹰盲盒',
+    spadePoints: 3,
+    stock: 100,
+    imageUrl: 'images/image (1).png',
+    category: 'toys',
+    popularity: 95,
+    createdAt: new Date('2025-01-01').toISOString()
+  },
+  {
+    id: 'prod6',
+    name: 'Power Bank',
+    brand: 'SPADE',
+    description: 'SPADE 主题移动电源，大容量设计',
+    spadePoints: 4,
+    stock: 100,
+    imageUrl: 'images/img_v3_02t1_cad0b75f-282a-44ab-9e1c-7997b7d188cg.jpg',
+    category: 'electronics',
+    popularity: 95,
+    createdAt: new Date('2025-01-01').toISOString()
+  },
+  {
+    id: 'prod7',
+    name: 'Hoodie',
+    brand: 'SPADE',
+    description: 'SPADE 主题连帽衫，高品质舒适面料',
+    spadePoints: 4,
+    stock: 100,
+    imageUrl: 'images/44534a32e412180cff401b0c7d865744.jpg',
+    category: 'clothing',
+    popularity: 100,
+    createdAt: new Date('2025-01-01').toISOString()
+  }
 ];
 
 // Mock orders data.
@@ -779,45 +797,73 @@ window.addEventListener('load', () => {
 });
 
 // 动态生成兑换平台内容.
-async function generateRedeemContent() {
+// 根据用户输入的积分过滤可兑换商品
+function filterProducts() {
+    // 获取用户输入的SPADE积分
+    const spadePointsInput = document.getElementById('spadePointsInput');
+    
+    const userSpadePoints = parseInt(spadePointsInput.value) || 0;
+    
+    // 过滤可兑换商品：SPADE积分足够 且 库存充足
+    const eligibleProducts = products.filter(product => {
+        const hasEnoughPoints = userSpadePoints >= product.spadePoints;
+        const hasStock = product.stock > 0;
+        
+        return hasEnoughPoints && hasStock;
+    });
+    
+    // 渲染过滤后的商品列表
+    generateRedeemContent(eligibleProducts, userSpadePoints);
+}
+
+// 生成兑换内容 - 支持过滤后的商品列表
+async function generateRedeemContent(productList = products, userSpadePoints = currentUser.spadePoints) {
     if (!redeemPlatform) return;
     
     // 显示加载状态.
     redeemPlatform.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin fa-2x"></i><p>Loading products...</p></div>';
     
     try {
-        // 直接使用本地模拟数据.
-        const productList = products;
-        
         // 清空现有内容.
         redeemPlatform.innerHTML = '';
+        
+        // 如果没有可兑换商品，显示提示
+        if (productList.length === 0) {
+            redeemPlatform.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-info-circle"></i><p>目前没有可兑换的商品</p></div>';
+            return;
+        }
         
         // 根据产品数据生成卡片.
         productList.forEach(product => {
             const card = document.createElement('div');
             card.className = 'redeem-card';
             
+            // 检查用户是否有足够的SPADE积分
+            const canRedeem = userSpadePoints >= product.spadePoints && product.stock > 0;
+            
             // 设置卡片内容.
             card.innerHTML = `
                 <div class="redeem-card-header">
                     <img src="${product.imageUrl}" alt="${product.name}" class="product-image">
                     <h3>${product.name}</h3>
-                    <span class="points-required">${product.pcPoints} PC</span>
+                    <div class="points-required">
+                        <span class="spade-points">${product.spadePoints} SPADE Points</span>
+                    </div>
                 </div>
                 <div class="redeem-card-content">
                     <p>${product.description}</p>
-                    <small class="stock-info">Stock: ${product.stock}</small>
+                    <small class="stock-info">库存: ${product.stock}</small>
                 </div>
                 <div class="redeem-card-footer">
-                    <button class="btn btn-primary" onclick="redeemProduct('${product.id}')">
-                        ${currentUser.pcPoints >= product.pcPoints && product.stock > 0 ? 'Redeem' : 'Insufficient Points'}
+                    <button class="btn btn-primary" onclick="redeemProduct('${product.id}', ${userSpadePoints})">
+                        ${canRedeem ? '立即兑换' : '积分不足'}
                     </button>
                 </div>
             `;
             
             // 如果积分不足或库存为0，禁用按钮.
             const button = card.querySelector('button');
-            if (currentUser.pcPoints < product.pcPoints || product.stock <= 0) {
+            if (!canRedeem) {
                 button.disabled = true;
                 button.classList.add('btn-disabled');
             }
@@ -871,12 +917,8 @@ function generateProfileContent() {
             if (profilePoints) {
                 profilePoints.innerHTML = `
                     <div class="points-card">
-                        <div class="points-type">PC Points</div>
-                        <div class="points-amount">${userData.pcPoints}</div>
-                    </div>
-                    <div class="points-card">
-                        <div class="points-type">BP Points</div>
-                        <div class="points-amount">${userData.bpPoints || 0}</div>
+                        <div class="points-type">SPADE Points</div>
+                        <div class="points-amount">${userData.spadePoints}</div>
                     </div>
                 `;
             }
@@ -968,50 +1010,177 @@ function generateProfileContent() {
 }
 
 // 兑换产品功能.
-function redeemProduct(productId) {
+// 飞书多维表格配置（需要替换为真实的配置信息）
+const FEISHU_CONFIG = {
+    // 飞书开放平台应用凭证
+    APP_ID: 'your_app_id',
+    APP_SECRET: 'your_app_secret',
+    // 多维表格信息
+    SPREADSHEET_TOKEN: 'your_spreadsheet_token',
+    SHEET_ID: 'your_sheet_id'
+};
+
+// 获取飞书访问令牌
+async function getFeishuAccessToken() {
+    try {
+        // 实际环境中，应该调用飞书API获取访问令牌
+        // 这里使用模拟数据
+        console.log('获取飞书访问令牌...');
+        return 'mock_access_token_123456';
+        
+        // 真实API调用示例（需要替换为实际的API调用）
+        /*
+        const response = await fetch('https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                app_id: FEISHU_CONFIG.APP_ID,
+                app_secret: FEISHU_CONFIG.APP_SECRET
+            })
+        });
+        
+        const data = await response.json();
+        return data.tenant_access_token;
+        */
+    } catch (error) {
+        console.error('获取飞书访问令牌失败:', error);
+        throw error;
+    }
+}
+
+// 向飞书多维表格添加行数据
+async function addFeishuSheetRow(accessToken, rowData) {
+    try {
+        // 实际环境中，应该调用飞书API添加行数据
+        // 这里使用模拟数据
+        console.log('向飞书多维表格添加数据:', rowData);
+        return true;
+        
+        // 真实API调用示例（需要替换为实际的API调用）
+        /*
+        const response = await fetch(`https://open.feishu.cn/open-apis/sheets/v3/spreadsheets/${FEISHU_CONFIG.SPREADSHEET_TOKEN}/sheets/${FEISHU_CONFIG.SHEET_ID}/rows`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+            body: JSON.stringify({
+                rows: [
+                    {
+                        fields: rowData
+                    }
+                ]
+            })
+        });
+        
+        const data = await response.json();
+        return data.code === 0;
+        */
+    } catch (error) {
+        console.error('向飞书多维表格添加数据失败:', error);
+        throw error;
+    }
+}
+
+// 兑换产品函数
+async function redeemProduct(productId, userSpadePoints = currentUser.spadePoints) {
     const product = products.find(p => p.id === productId);
     if (!product) return;
     
-    // 检查积分和库存.
-    if (currentUser.pcPoints < product.pcPoints) {
-        alert('Insufficient PC points!');
-        return;
-    }
-    
+    // 检查库存.
     if (product.stock <= 0) {
-        alert('Product is out of stock!');
+        alert('商品库存不足！');
         return;
     }
     
-    // 执行兑换.
-    currentUser.pcPoints -= product.pcPoints;
-    product.stock -= 1;
+    // 检查SPADE积分
+    const hasEnoughPoints = userSpadePoints >= product.spadePoints;
     
-    // 创建新订单.
-    const newOrder = {
-        id: 'ord-' + Date.now(),
-        userId: currentUser.id,
-        productId: product.id,
-        productName: product.name,
-        pointsSpent: product.pcPoints,
-        status: 'pending',
-        createdAt: new Date().toISOString(),
-        shippingAddress: {
-            name: currentUser.name,
-            address: '123 ByteDance Road, Chaoyang District, Beijing',
-            phone: '13800138000'
+    if (!hasEnoughPoints) {
+        alert('积分不足，无法兑换该商品！');
+        return;
+    }
+    
+    try {
+        // 收集兑换信息
+        const redeemInfo = {
+            userId: currentUser.id,
+            userName: currentUser.name,
+            userEmail: currentUser.email,
+            productId: product.id,
+            productName: product.name,
+            redeemTime: new Date().toISOString(),
+            stockBefore: product.stock,
+            stockAfter: product.stock - 1
+        };
+        
+        // 确定使用的积分类型
+        redeemInfo.pointsType = 'SPADE';
+        redeemInfo.pointsSpent = product.spadePoints;
+        redeemInfo.pointsBefore = userSpadePoints;
+        redeemInfo.pointsAfter = userSpadePoints - product.spadePoints;
+        
+        // 调用飞书多维表格API提交数据
+        const accessToken = await getFeishuAccessToken();
+        const success = await addFeishuSheetRow(accessToken, {
+            '用户ID': redeemInfo.userId,
+            '用户名': redeemInfo.userName,
+            '邮箱': redeemInfo.userEmail,
+            '商品ID': redeemInfo.productId,
+            '商品名称': redeemInfo.productName,
+            '积分类型': redeemInfo.pointsType,
+            '消耗积分': redeemInfo.pointsSpent,
+            '兑换时间': new Date(redeemInfo.redeemTime).toLocaleString('zh-CN'),
+            '库存变化': `${redeemInfo.stockBefore} → ${redeemInfo.stockAfter}`,
+            '积分变化': `${redeemInfo.pointsBefore} → ${redeemInfo.pointsAfter}`
+        });
+        
+        if (success) {
+            // 执行兑换操作
+            product.stock -= 1;
+            
+            // 更新用户积分（如果是全局用户）
+            currentUser.spadePoints -= product.spadePoints;
+            
+            // 创建新订单.
+            const newOrder = {
+                id: 'ord-' + Date.now(),
+                userId: currentUser.id,
+                productId: product.id,
+                productName: product.name,
+                pointsSpent: redeemInfo.pointsSpent,
+                pointsType: redeemInfo.pointsType,
+                status: 'completed',
+                createdAt: redeemInfo.redeemTime,
+                shippingAddress: {
+                    name: currentUser.name,
+                    address: '123 ByteDance Road, Chaoyang District, Beijing',
+                    phone: '13800138000'
+                }
+            };
+            
+            // 添加到订单列表.
+            orders.push(newOrder);
+            
+            // 更新UI.
+            // 如果用户通过表单输入了积分，需要重新获取输入的积分值
+            const spadePointsInput = document.getElementById('spadePointsInput');
+            const updatedSpadePoints = parseInt(spadePointsInput?.value) || currentUser.spadePoints;
+            
+            generateRedeemContent(products, updatedSpadePoints);
+            generateProfileContent();
+            
+            // 显示成功消息.
+            alert(`成功兑换 ${product.name}！\n\n消耗积分：${redeemInfo.pointsType} ${redeemInfo.pointsSpent}\n剩余积分：${redeemInfo.pointsAfter}`);
+        } else {
+            alert('兑换失败，请稍后重试！');
         }
-    };
-    
-    // 添加到订单列表.
-    orders.push(newOrder);
-    
-    // 更新UI.
-    generateRedeemContent();
-    generateProfileContent();
-    
-    // 显示成功消息.
-    alert(`Successfully redeemed ${product.name}!`);
+    } catch (error) {
+        console.error('兑换过程中发生错误:', error);
+        alert('兑换过程中发生错误，请稍后重试！');
+    }
 }
 
 // API调用函数（实际后端API）.

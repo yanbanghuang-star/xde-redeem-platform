@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPADE: Rewarding Accuracy &amp; Consistency</title>
+    <title>SPADE: Complete Incentive Platform</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <!-- 滚动进度条。 -->
@@ -23,13 +25,18 @@
             </div>
             <ul class="nav-links">
                 <li><a href="#hero">Home</a></li>
-                <li><a href="#redeem" id="pcRedeemLink">PC Only-Train</a></li>
-                <li><a href="#bp" id="bpLink">BP</a></li>
-                <li><a href="#profile" id="profileLink">Profile</a></li>
+                <li><a href="#monetary">Monetary</a></li>
+                <li><a href="#non-monetary">Non-Monetary</a></li>
+                <li><a href="#xde-points">SPADE Points</a></li>
+                <li><a href="#admin">Admin</a></li>
                 <li><a href="#faq">FAQ</a></li>
             </ul>
             <div class="nav-cta">
-                <!-- Join Now link removed. -->
+                <!-- User profile -->
+                <div class="user-profile">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="currentUser">John Doe</span>
+                </div>
             </div>
             <div class="mobile-menu">
                 <i class="fas fa-bars"></i>
@@ -41,31 +48,32 @@
     <section class="hero" id="hero">
         <div class="container">
             <div class="hero-content">
-                <h1 class="hero-title" style="margin-bottom: 1rem;"><span class="typewriter-text" id="heroTitle">SPADE Gift Redeem Platform</span><span class="typewriter-cursor"></span></h1>
-                <p class="hero-subtitle"><div class="typewriter-text" id="heroSubtitle">The incentive program for XDEs who build trust through reliable security and privacy work. Earn points, unlock rewards.</div><span class="typewriter-cursor"></span></p>
+                <h1 class="hero-title" style="margin-bottom: 1rem;"><span class="typewriter-text" id="heroTitle">SPADE Complete Incentive Platform</span><span class="typewriter-cursor"></span></h1>
+                <p class="hero-subtitle"><div class="typewriter-text" id="heroSubtitle">Comprehensive platform for XDEs, integrating monetary rewards, non-monetary gifts, and points management to recognize contributions across all dimensions.</div><span class="typewriter-cursor"></span></p>
                 <div class="hero-cta">
-                    <a href="#redeem" class="btn btn-primary">Start Redemption</a>
-                    <a href="#profile" class="btn btn-secondary">Join Now</a>
+                    <a href="#non-monetary" class="btn btn-primary">Start Redemption</a>
+                    <a href="#xde-points" class="btn btn-secondary">View Points</a>
                 </div>
             </div>
             <div class="hero-visual">
-                <!-- Chiikawa大型海报。 -->
-                <div class="chiikawa-poster" id="chiikawaPoster">
-                    <div class="chiikawa-main">
-                        <div class="chiikawa-body">
-                            <div class="chiikawa-face">
-                                <div class="chiikawa-eyes"></div>
-                                <div class="chiikawa-mouth"></div>
-                            </div>
-                            <div class="chiikawa-ears"></div>
-                            <div class="chiikawa-arms">
-                                <div class="chiikawa-hand left">
-                                    <i class="fas fa-book"></i>
-                                </div>
-                                <div class="chiikawa-hand right">
-                                    <i class="fas fa-star"></i>
-                                </div>
-                            </div>
+                <!-- SPADE Platform Visual -->
+                <div class="platform-visual">
+                    <div class="visual-components">
+                        <div class="component monetary">
+                            <i class="fas fa-dollar-sign"></i>
+                            <span>Monetary</span>
+                        </div>
+                        <div class="component non-monetary">
+                            <i class="fas fa-gift"></i>
+                            <span>Non-Monetary</span>
+                        </div>
+                        <div class="component xde-points">
+                            <i class="fas fa-chart-line"></i>
+                            <span>XDE Points</span>
+                        </div>
+                        <div class="component admin">
+                            <i class="fas fa-cog"></i>
+                            <span>Admin</span>
                         </div>
                     </div>
                 </div>
@@ -73,67 +81,441 @@
         </div>
     </section>
 
-
-
-
-    <!-- 兑换界面。 -->
-    <section class="redeem" id="redeem">
+    <!-- Platform Overview -->
+    <section class="overview" id="overview">
         <div class="container">
-            <h2 class="section-title">PC Redemption</h2>
-            <div class="redeem-content">
-                <div class="redeem-intro">
-                    <i class="fas fa-book"></i>
-                    <p>PC (Professional Credentials) 是XDE平台的专业积分，可用于兑换专属培训资源和认证机会。Exchange your PC points for exclusive training materials and resources. Track your progress and unlock new learning opportunities.</p>
+            <h2 class="section-title">Platform Overview</h2>
+            <div class="overview-cards">
+                <div class="overview-card">
+                    <div class="card-icon monetary-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <h3>Monetary Rewards</h3>
+                    <p>Manage cash rewards for high-impact contributions, including nomination, approval, and payout tracking.</p>
+                    <a href="#monetary" class="btn btn-secondary">Learn More</a>
                 </div>
-                <div class="redeem-platform">
-                    <div class="redeem-card">
-                        <div class="redeem-card-header">
-                            <h3>Training Library</h3>
-                            <span class="points-required">50 PC</span>
+                <div class="overview-card">
+                    <div class="card-icon non-monetary-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <h3>Non-Monetary Gifts</h3>
+                    <p>Redeem SPADE Points for exclusive gifts, with inventory management and delivery tracking.</p>
+                    <a href="#non-monetary" class="btn btn-secondary">Learn More</a>
+                </div>
+                <div class="overview-card">
+                    <div class="card-icon xde-points-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>XDE Points Management</h3>
+                    <p>Track participation across scenarios, calculate quarterly points, and visualize contribution data.</p>
+                    <a href="#xde-points" class="btn btn-secondary">Learn More</a>
+                </div>
+                <div class="overview-card">
+                    <div class="card-icon admin-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <h3>Admin Dashboard</h3>
+                    <p>Manage users, gifts, data imports, and system settings for comprehensive platform administration.</p>
+                    <a href="#admin" class="btn btn-secondary">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Monetary Section -->
+    <section class="monetary" id="monetary">
+        <div class="container">
+            <h2 class="section-title">Monetary Rewards</h2>
+            <div class="monetary-content">
+                <div class="monetary-intro">
+                    <i class="fas fa-dollar-sign"></i>
+                    <p>Cash rewards for high-impact contributions in SPADE activities, including incidents, inquiries, PVQs, and risk mitigation projects.</p>
+                </div>
+                
+                <!-- Reward Management -->
+                <div class="reward-management">
+                    <h3>Reward Nominations</h3>
+                    <form class="nomination-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="nomineeName">Nominee Name</label>
+                                <input type="text" id="nomineeName" placeholder="Enter nominee name">
+                            </div>
+                            <div class="form-group">
+                                <label for="contributionType">Contribution Type</label>
+                                <select id="contributionType">
+                                    <option value="incident">Incident</option>
+                                    <option value="inquiry">Inquiry</option>
+                                    <option value="pvq">PVQ</option>
+                                    <option value="risk">Risk Mitigation</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="caseId">Case ID</label>
+                                <input type="text" id="caseId" placeholder="Enter case ID">
+                            </div>
+                            <div class="form-group">
+                                <label for="impactLevel">Impact Level</label>
+                                <select id="impactLevel">
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="critical">Critical</option>
+                                </select>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="description">Description</label>
+                                <textarea id="description" rows="4" placeholder="Describe the contribution"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="rewardAmount">Reward Amount</label>
+                                <input type="number" id="rewardAmount" placeholder="Enter reward amount">
+                            </div>
+                            <div class="form-group">
+                                <label for="currency">Currency</label>
+                                <select id="currency">
+                                    <option value="USD">USD</option>
+                                    <option value="CNY">CNY</option>
+                                    <option value="SGD">SGD</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="redeem-card-content">
-                            <i class="fas fa-book"></i>
-                            <p>Access to complete training materials and case studies</p>
+                        <button type="submit" class="btn btn-primary">Submit Nomination</button>
+                    </form>
+                </div>
+                
+                <!-- Reward List -->
+                <div class="reward-list">
+                    <h3>Reward History</h3>
+                    <table class="rewards-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nominee</th>
+                                <th>Contribution</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rewardsTableBody">
+                            <!-- Dynamic content will be added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Non-Monetary Section -->
+    <section class="non-monetary" id="non-monetary">
+        <div class="container">
+            <h2 class="section-title">Non-Monetary Gifts</h2>
+            <div class="non-monetary-content">
+                <div class="non-monetary-intro">
+                    <i class="fas fa-gift"></i>
+                    <p>Redeem your SPADE Points for exclusive gifts, with a variety of options across different score tiers.</p>
+                </div>
+                
+                <!-- Points Input -->
+                <div class="points-input-form">
+                    <div class="form-group">
+                        <label for="spadePointsInput">Your SPADE Points:</label>
+                        <input type="number" id="spadePointsInput" min="0" placeholder="Enter your SPADE Points">
+                    </div>
+                    <button class="btn btn-primary" onclick="filterProducts()">View Available Gifts</button>
+                </div>
+                
+                <!-- Gift Categories -->
+                <div class="gift-categories">
+                    <button class="category-btn active" onclick="filterByCategory('all')">All</button>
+                    <button class="category-btn" onclick="filterByCategory('stationery')">Stationery</button>
+                    <button class="category-btn" onclick="filterByCategory('apparel')">Apparel</button>
+                    <button class="category-btn" onclick="filterByCategory('electronics')">Electronics</button>
+                    <button class="category-btn" onclick="filterByCategory('accessories')">Accessories</button>
+                </div>
+                
+                <!-- Gift Platform -->
+                <div class="gift-platform" id="giftPlatform">
+                    <!-- Dynamic content will be added here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SPADE Points Section -->
+    <section class="xde-points" id="xde-points">
+        <div class="container">
+            <h2 class="section-title">SPADE Points Dashboard</h2>
+            <div class="xde-points-content">
+                <!-- Points Overview -->
+                <div class="points-overview">
+                    <div class="overview-card total-points">
+                        <h3>Total SPADE Points</h3>
+                        <div class="points-value" id="totalPoints">0</div>
+                        <p>Accumulated across all quarters</p>
+                    </div>
+                    <div class="overview-card current-quarter">
+                        <h3>Current Quarter</h3>
+                        <div class="quarter-selector">
+                            <select id="quarterSelect">
+                                <option value="Q1-2026">Q1 2026</option>
+                                <option value="Q4-2025">Q4 2025</option>
+                                <option value="Q3-2025">Q3 2025</option>
+                                <option value="Q2-2025">Q2 2025</option>
+                            </select>
                         </div>
-                        <div class="redeem-card-footer">
-                            <button class="btn btn-primary">Redeem</button>
+                        <div class="points-value" id="quarterPoints">0</div>
+                    </div>
+                    <div class="overview-card contribution-rate">
+                        <h3>Contribution Rate</h3>
+                        <div class="rate-value" id="contributionRate">0%</div>
+                        <p>Percentage of scenarios participated</p>
+                    </div>
+                </div>
+                
+                <!-- Points Breakdown -->
+                <div class="points-breakdown">
+                    <h3>Points Breakdown</h3>
+                    <div class="breakdown-grid">
+                        <div class="breakdown-item">
+                            <h4>Incident</h4>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%;"></div>
+                                <span class="progress-text">1/1</span>
+                            </div>
+                        </div>
+                        <div class="breakdown-item">
+                            <h4>Inquiry</h4>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 50%;"></div>
+                                <span class="progress-text">1/2</span>
+                            </div>
+                        </div>
+                        <div class="breakdown-item">
+                            <h4>PVQ</h4>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%;"></div>
+                                <span class="progress-text">0/1</span>
+                            </div>
+                        </div>
+                        <div class="breakdown-item">
+                            <h4>Training</h4>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%;"></div>
+                                <span class="progress-text">1/1</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="redeem-card">
-                        <div class="redeem-card-header">
-                            <h3>Advanced Course</h3>
-                            <span class="points-required">100 PC</span>
-                        </div>
-                        <div class="redeem-card-content">
-                            <i class="fas fa-graduation-cap"></i>
-                            <p>Enroll in our advanced security certification course</p>
-                        </div>
-                        <div class="redeem-card-footer">
-                            <button class="btn btn-primary">Redeem</button>
-                        </div>
-                    </div>
-                    <div class="redeem-card">
-                        <div class="redeem-card-header">
-                            <h3>Expert Workshop</h3>
-                            <span class="points-required">200 PC</span>
-                        </div>
-                        <div class="redeem-card-content">
-                            <i class="fas fa-users"></i>
-                            <p>Join exclusive workshops with industry experts</p>
-                        </div>
-                        <div class="redeem-card-footer">
-                            <button class="btn btn-primary">Redeem</button>
-                        </div>
+                </div>
+                
+                <!-- Data Visualization -->
+                <div class="data-visualization">
+                    <h3>Contribution Analysis</h3>
+                    <div class="chart-container">
+                        <canvas id="contributionChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- BP部分。 -->
-    <section class="bp" id="bp">
+    <!-- Admin Section -->
+    <section class="admin" id="admin">
         <div class="container">
-            <h2 class="section-title">BP Program</h2>
+            <h2 class="section-title">Admin Dashboard</h2>
+            <div class="admin-content">
+                <!-- Admin Tabs -->
+                <div class="admin-tabs">
+                    <button class="tab-btn active" onclick="switchTab('users')">User Management</button>
+                    <button class="tab-btn" onclick="switchTab('gifts')">Gift Management</button>
+                    <button class="tab-btn" onclick="switchTab('data')">Data Management</button>
+                    <button class="tab-btn" onclick="switchTab('settings')">Settings</button>
+                </div>
+                
+                <!-- Tab Content -->
+                <div class="tab-content" id="users-tab">
+                    <h3>User Management</h3>
+                    <div class="user-management">
+                        <div class="search-bar">
+                            <input type="text" placeholder="Search users...">
+                            <button class="btn btn-secondary">Search</button>
+                        </div>
+                        <table class="users-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Dynamic content will be added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="gifts-tab" style="display: none;">
+                    <h3>Gift Management</h3>
+                    <div class="gift-management">
+                        <button class="btn btn-primary" onclick="addGift()">Add New Gift</button>
+                        <table class="gifts-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Score Required</th>
+                                    <th>Stock</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Dynamic content will be added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="data-tab" style="display: none;">
+                    <h3>Data Management</h3>
+                    <div class="data-management">
+                        <div class="data-import-export">
+                            <button class="btn btn-primary" onclick="importData()">Import Data</button>
+                            <button class="btn btn-secondary" onclick="exportData()">Export Data</button>
+                        </div>
+                        <div class="data-sources">
+                            <h4>Data Sources</h4>
+                            <ul>
+                                <li>Bytelearning (Training Data)</li>
+                                <li>Inquiry Team (Inquiry Data)</li>
+                                <li>PIR Team (Participation Data)</li>
+                                <li>Risk Team (PVQ Data)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="settings-tab" style="display: none;">
+                    <h3>System Settings</h3>
+                    <div class="settings-form">
+                        <div class="form-group">
+                            <label for="apiKey">API Key</label>
+                            <input type="text" id="apiKey" placeholder="Enter API key">
+                        </div>
+                        <div class="form-group">
+                            <label for="spreadsheetToken">Spreadsheet Token</label>
+                            <input type="text" id="spreadsheetToken" placeholder="Enter spreadsheet token">
+                        </div>
+                        <div class="form-group">
+                            <label for="syncInterval">Sync Interval (minutes)</label>
+                            <input type="number" id="syncInterval" value="30">
+                        </div>
+                        <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <h2 class="section-title">FAQ</h2>
+            <div class="faq-content">
+                <div class="faq-item">
+                    <h3>How do I earn SPADE Points?</h3>
+                    <p>You earn SPADE Points by participating in key SPADE activities, including incidents, inquiries, PVQs, training courses, and risk mitigation projects. Points are accumulated each quarter based on your participation.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>How do I redeem gifts with SPADE Points?</h3>
+                    <p>Navigate to the Non-Monetary section, enter your SPADE Points, and view available gifts. Select the gift you want to redeem and follow the instructions to complete the redemption process.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>How are monetary rewards determined?</h3>
+                    <p>Monetary rewards are based on the impact level of your contribution. High-impact contributions such as critical incidents or complex inquiries are eligible for higher cash rewards through the nomination process.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>How often are points updated?</h3>
+                    <p>Points are updated quarterly based on your participation in SPADE activities during that period. The OPM team collects data from various sources and updates the points accordingly.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <div class="footer-logo">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>SPADE</span>
+                    </div>
+                    <p>Security & Privacy Advocacy Domain Experts</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#hero">Home</a></li>
+                        <li><a href="#monetary">Monetary</a></li>
+                        <li><a href="#non-monetary">Non-Monetary</a></li>
+                        <li><a href="#xde-points">XDE Points</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> spade@bytedance.com</li>
+                        <li><i class="fas fa-phone"></i> +86 10 1234 5678</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 SPADE Program. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal for Add Gift -->
+    <div class="modal" id="addGiftModal" style="display: none;">
+        <div class="modal-content">
+            <h3>Add New Gift</h3>
+            <form class="gift-form">
+                <div class="form-group">
+                    <label for="giftName">Gift Name</label>
+                    <input type="text" id="giftName" placeholder="Enter gift name">
+                </div>
+                <div class="form-group">
+                    <label for="scoreRequired">Score Required</label>
+                    <input type="number" id="scoreRequired" min="1" placeholder="Enter score required">
+                </div>
+                <div class="form-group">
+                    <label for="giftStock">Stock</label>
+                    <input type="number" id="giftStock" min="0" placeholder="Enter stock quantity">
+                </div>
+                <div class="form-group">
+                    <label for="giftCategory">Category</label>
+                    <select id="giftCategory">
+                        <option value="stationery">Stationery</option>
+                        <option value="apparel">Apparel</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="accessories">Accessories</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addGiftModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
             <div class="bp-content">
                 <div class="bp-info">
                     <h3>Bonus Points System</h3>
@@ -179,12 +561,8 @@
                     </div>
                     <div class="profile-points">
                         <div class="points-card">
-                            <div class="points-type">PC Points</div>
-                            <div class="points-amount">150</div>
-                        </div>
-                        <div class="points-card">
-                            <div class="points-type">BP Points</div>
-                            <div class="points-amount">250</div>
+                            <div class="points-type">SPADE Points</div>
+                            <div class="points-amount">15</div>
                         </div>
                     </div>
                 </div>
@@ -201,15 +579,15 @@
                             </div>
                             <div class="order-item">
                                 <span data-label="Order ID">#ORD-001</span>
-                                <span data-label="Reward">Training Library</span>
-                                <span data-label="Points">50 PC</span>
+                                <span data-label="Reward">Blind Box Stickers Set</span>
+                                <span data-label="Points">2 SPADE</span>
                                 <span data-label="Status" class="status-completed">Completed</span>
                                 <span data-label="Date">2025-12-28</span>
                             </div>
                             <div class="order-item">
                                 <span data-label="Order ID">#ORD-002</span>
-                                <span data-label="Reward">Advanced Course</span>
-                                <span data-label="Points">100 PC</span>
+                                <span data-label="Reward">Tote Bag</span>
+                                <span data-label="Points">3 SPADE</span>
                                 <span data-label="Status" class="status-pending">Pending</span>
                                 <span data-label="Date">2025-12-29</span>
                             </div>
@@ -244,16 +622,16 @@
             <h2 class="section-title">Frequently Asked Questions</h2>
             <div class="faq-grid">
                 <div class="faq-item">
-                    <h3 class="faq-question">What is the difference between PC and BP?</h3>
-                    <p class="faq-answer">PC (Progress Credit) is for learning and proves your accuracy. BP (Bonus Points) is for doing and rewards your consistency. You need both for the best rewards.</p>
+                    <h3 class="faq-question">What is SPADE Points?</h3>
+                    <p class="faq-answer">SPADE Points is a unified积分 system that reflects your participation in key SPADE activities across all dimensions, including incidents, inquiries, PVQs, training, and risk mitigation projects.</p>
                 </div>
                 <div class="faq-item">
-                    <h3 class="faq-question">What can I get with just PC?</h3>
-                    <p class="faq-answer">100 PC unlocks a standard tier of rewards and, more importantly, gives you the ability to spend any BP you earn.</p>
+                    <h3 class="faq-question">How do I earn SPADE Points?</h3>
+                    <p class="faq-answer">You earn SPADE Points by actively participating in SPADE activities each quarter, such as completing training, contributing to incidents, supporting inquiries, and working on PVQ projects.</p>
                 </div>
                 <div class="faq-item">
-                    <h3 class="faq-question">Where can I see my points?</h3>
-                    <p class="faq-answer">You can track your PC and BP balance in your personal SPADE dashboard. <a href="#">View Dashboard</a></p>
+                    <h3 class="faq-question">Where can I see my SPADE Points?</h3>
+                    <p class="faq-answer">You can track your SPADE Points balance in your personal SPADE dashboard. <a href="#xde-points">View Dashboard</a></p>
                 </div>
                 <div class="faq-item">
                     <h3 class="faq-question">Do points expire?</h3>
