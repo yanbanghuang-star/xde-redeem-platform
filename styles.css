@@ -530,6 +530,36 @@ body::before {
     font-size: 1.125rem;
 }
 
+/* Overview section */
+.overview {
+    padding: 8rem 0 4rem;
+}
+
+/* Monetary section */
+.monetary {
+    padding: 8rem 0 4rem;
+}
+
+/* Non-Monetary section */
+.non-monetary {
+    padding: 8rem 0 4rem;
+}
+
+/* XDE Points section */
+.xde-points {
+    padding: 8rem 0 4rem;
+}
+
+/* Admin section */
+.admin {
+    padding: 8rem 0 4rem;
+}
+
+/* FAQ section */
+.faq {
+    padding: 8rem 0 4rem;
+}
+
 /* Overview cards */
 .overview-cards {
     display: grid;
@@ -701,6 +731,9 @@ body::before {
     z-index: 1000;
     transition: var(--transition);
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    min-height: 80px;
+    display: flex;
+    align-items: center;
 }
 
 .navbar::before {
@@ -1015,7 +1048,7 @@ body::before {
 
 /* Hero区域样式 .*/
 .hero {
-    padding: 12rem 0 8rem;
+    padding: 18rem 0 8rem;
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     position: relative;
     overflow: hidden;
@@ -1042,8 +1075,8 @@ body::before {
 }
 
 .hero .container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-wrap: wrap;
     gap: 4rem;
     align-items: center;
     position: relative;
@@ -1051,7 +1084,59 @@ body::before {
 }
 
 .hero-content {
+    flex: 1 1 400px;
     max-width: 500px;
+}
+
+.hero-visual {
+    flex: 1 1 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Responsive adjustments for hero section */
+@media (max-width: 1024px) {
+    .hero .container {
+        gap: 3rem;
+    }
+    
+    .hero-content {
+        flex: 1 1 350px;
+    }
+    
+    .hero-visual {
+        flex: 1 1 350px;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero .container {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .hero-content {
+        max-width: 100%;
+        order: 1;
+    }
+    
+    .hero-visual {
+        order: 2;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
 }
 
 .hero-title {
@@ -1147,6 +1232,54 @@ body::before {
     gap: 2rem;
     position: relative;
     z-index: 1;
+    max-width: 350px;
+    width: 100%;
+    margin-left: auto;
+}
+
+/* Responsive adjustments for visual components */
+@media (max-width: 1200px) {
+    .visual-components {
+        max-width: 300px;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .hero .container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .hero-content {
+        order: 1;
+        max-width: 100%;
+        margin-bottom: 2rem;
+    }
+    
+    .hero-visual {
+        order: 2;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .visual-components {
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .visual-components {
+        max-width: 300px;
+        gap: 1rem;
+    }
+    
+    .component {
+        padding: 1.5rem;
+    }
 }
 
 .component {
@@ -1823,6 +1956,208 @@ body::before {
     text-align: center;
     color: var(--color-text-muted);
     font-size: 0.875rem;
+}
+
+/* 兑换卡片样式 */
+.redeem-card {
+    background: var(--color-bg-card);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-all);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.redeem-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: var(--shadow-lg);
+}
+
+.redeem-card-header {
+    padding: 1.5rem;
+    text-align: center;
+    background: var(--gradient-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.redeem-card-header .product-image {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+    background: white;
+    padding: 1rem;
+    border-radius: var(--radius-lg);
+}
+
+.redeem-card-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--color-text-main);
+}
+
+.redeem-card-header .points-required {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+.redeem-card-header .spade-points {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.redeem-card-content {
+    padding: 1.5rem;
+}
+
+.redeem-card-content p {
+    color: var(--color-text-secondary);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.redeem-card-content .stock-info {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+.redeem-card-footer {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.redeem-card-footer .btn {
+    width: 100%;
+}
+
+.redeem-card-footer .btn-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* 礼品平台样式 */
+.gift-platform {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+/* 货币奖励管理样式 */
+.monetary-rewards-content {
+    margin-top: 2rem;
+}
+
+.rewards-section {
+    margin-bottom: 3rem;
+}
+
+.rewards-section h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--color-text-main);
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--color-primary);
+}
+
+.rewards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.reward-card {
+    background: var(--color-bg-card);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-all);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.reward-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.reward-card-header {
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--gradient-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.reward-card-header h5 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+    margin: 0;
+}
+
+.reward-card-header .reward-amount {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-lg);
+}
+
+.reward-card-content {
+    padding: 1.5rem;
+}
+
+.reward-card-content .reward-reason {
+    color: var(--color-text-secondary);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.reward-card-content .reward-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    font-size: 0.875rem;
+}
+
+.reward-card-content .reward-meta span {
+    display: block;
+    color: var(--color-text-muted);
+}
+
+.reward-card-actions {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+.reward-card-actions .btn {
+    flex: 1;
+    max-width: 150px;
+}
+
+/* 状态相关样式 */
+.rewards-section.status-pending h4 {
+    border-bottom-color: var(--color-warning);
+}
+
+.rewards-section.status-approved h4 {
+    border-bottom-color: var(--color-info);
+}
+
+.rewards-section.status-paid h4 {
+    border-bottom-color: var(--color-success);
+}
+
+.rewards-section.status-cancelled h4 {
+    border-bottom-color: var(--color-danger);
 }
 
 /* FAQ区域样式 .*/
@@ -3095,5 +3430,264 @@ body::before {
     .reward-item:hover,
     .faq-item:hover {
         transform: translateY(-10px) scale(1.01);
+    }
+}
+
+/* 增强的响应式布局 */
+@media (max-width: 1200px) {
+    .gift-platform {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .rewards-list {
+        gap: 1rem;
+    }
+    
+    .reward-card-actions {
+        flex-direction: column;
+    }
+    
+    .reward-card-actions .btn {
+        max-width: none;
+    }
+}
+
+@media (max-width: 1024px) {
+    .gift-platform {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1rem;
+    }
+    
+    .redeem-card-header .product-image {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .redeem-card-header h3 {
+        font-size: 1rem;
+    }
+    
+    .reward-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .reward-card-header .reward-amount {
+        font-size: 1rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .reward-card-content .reward-meta {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .gift-platform {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .redeem-card {
+        text-align: center;
+    }
+    
+    .redeem-card-header .product-image {
+        width: 70px;
+        height: 70px;
+        margin: 0 auto 1rem;
+    }
+    
+    .reward-card {
+        text-align: center;
+    }
+    
+    .reward-card-header {
+        align-items: center;
+    }
+    
+    .admin-dashboard {
+        padding: 1rem;
+    }
+    
+    .tab-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .tab-btn {
+        width: 100%;
+    }
+    
+    .chart-container {
+        height: 300px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .redeem-card-header {
+        padding: 1rem;
+    }
+    
+    .redeem-card-content {
+        padding: 1rem;
+    }
+    
+    .redeem-card-footer {
+        padding: 1rem;
+    }
+    
+    .reward-card-header {
+        padding: 1rem;
+    }
+    
+    .reward-card-content {
+        padding: 1rem;
+    }
+    
+    .reward-card-actions {
+        padding: 1rem;
+    }
+}
+
+/* 动画和过渡效果增强 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* 增强视觉效果 */
+.shadow-hover {
+    transition: all 0.3s ease;
+}
+
+.shadow-hover:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+}
+
+/* 增强按钮效果 */
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 增强卡片效果 */
+.card-hover {
+    transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* 增强输入框效果 */
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(75, 192, 192, 0.1);
+}
+
+/* 增强滚动条效果 */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-dark);
+}
+
+/* 图表容器样式 */
+.chart-container {
+    position: relative;
+    height: 400px;
+    width: 100%;
+    margin: 1rem 0;
+    background: var(--color-bg-card);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+}
+
+/* 响应式图表容器 */
+@media (max-width: 768px) {
+    .chart-container {
+        height: 300px;
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .chart-container {
+        height: 250px;
+        padding: 0.5rem;
     }
 }

@@ -270,6 +270,63 @@ const orders = [
   }
 ];
 
+// 货币奖励数据
+const monetaryRewards = [
+    {
+        id: 'reward-1',
+        userId: 'user1',
+        userName: 'Test User',
+        amount: 500,
+        currency: 'CNY',
+        type: 'cash',
+        reason: 'Q1 最佳贡献者',
+        status: 'pending',
+        createdAt: new Date('2025-03-01').toISOString(),
+        approvedAt: null,
+        paidAt: null,
+        approver: null
+    },
+    {
+        id: 'reward-2',
+        userId: 'user2',
+        userName: 'Alice Smith',
+        amount: 300,
+        currency: 'CNY',
+        type: 'cash',
+        reason: '培训完成奖励',
+        status: 'approved',
+        createdAt: new Date('2025-03-15').toISOString(),
+        approvedAt: new Date('2025-03-16').toISOString(),
+        paidAt: null,
+        approver: 'Admin'
+    }
+];
+
+// 奖励类型配置
+const REWARD_TYPES = {
+    MONETARY: {
+        CASH: 'cash',
+        GIFT_CARD: 'gift_card'
+    },
+    NON_MONETARY: {
+        GIFT_REDEMPTION: 'gift_redemption',
+        EXPERIENCE: 'experience'
+    },
+    POINTS: {
+        SPADE: 'SPADE',
+        XDE: 'XDE'
+    }
+};
+
+// 奖励状态配置
+const REWARD_STATUS = {
+    PENDING: 'pending',
+    APPROVED: 'approved',
+    PAID: 'paid',
+    REJECTED: 'rejected',
+    CANCELLED: 'cancelled'
+};
+
 // DOM元素选择.
 const navbar = document.getElementById('navbar');
 const navLinks = document.querySelectorAll('.nav-links a');
@@ -279,7 +336,7 @@ const sections = document.querySelectorAll('section');
 const hero = document.querySelector('.hero');
 const animationContainers = document.querySelectorAll('.animation-container');
 const scrollProgress = document.getElementById('scrollProgress');
-const redeemPlatform = document.querySelector('.redeem-platform');
+const giftPlatform = document.getElementById('giftPlatform');
 const profileContent = document.querySelector('.profile-content');
 const ordersTable = document.querySelector('.orders-table');
 const profileInfo = document.querySelector('.profile-info');
@@ -818,18 +875,18 @@ function filterProducts() {
 
 // 生成兑换内容 - 支持过滤后的商品列表
 async function generateRedeemContent(productList = products, userSpadePoints = currentUser.spadePoints) {
-    if (!redeemPlatform) return;
+    if (!giftPlatform) return;
     
     // 显示加载状态.
-    redeemPlatform.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin fa-2x"></i><p>Loading products...</p></div>';
+    giftPlatform.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin fa-2x"></i><p>Loading products...</p></div>';
     
     try {
         // 清空现有内容.
-        redeemPlatform.innerHTML = '';
+        giftPlatform.innerHTML = '';
         
         // 如果没有可兑换商品，显示提示
         if (productList.length === 0) {
-            redeemPlatform.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-info-circle"></i><p>目前没有可兑换的商品</p></div>';
+            giftPlatform.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-info-circle"></i><p>目前没有可兑换的商品</p></div>';
             return;
         }
         
@@ -869,11 +926,11 @@ async function generateRedeemContent(productList = products, userSpadePoints = c
             }
             
             // 添加到兑换平台.
-            redeemPlatform.appendChild(card);
+            giftPlatform.appendChild(card);
         });
     } catch (error) {
         console.error('Error generating redeem content:', error);
-        redeemPlatform.innerHTML = '<div style="text-align: center; padding: 40px; color: red;"><i class="fas fa-exclamation-triangle"></i><p>Failed to load products</p></div>';
+        giftPlatform.innerHTML = '<div style="text-align: center; padding: 40px; color: red;"><i class="fas fa-exclamation-triangle"></i><p>Failed to load products</p></div>';
     }
 }
 
@@ -1017,20 +1074,44 @@ const FEISHU_CONFIG = {
     APP_SECRET: 'your_app_secret',
     // 多维表格信息
     SPREADSHEET_TOKEN: 'your_spreadsheet_token',
-    SHEET_ID: 'your_sheet_id'
+    // 工作表ID映射
+    SHEETS: {
+        REDEMPTION: 'your_redemption_sheet_id',
+        USERS: 'your_users_sheet_id',
+        PRODUCTS: 'your_products_sheet_id',
+        REWARDS: 'your_rewards_sheet_id'
+    },
+    // API端点
+    API_ENDPOINTS: {
+        ACCESS_TOKEN: 'https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal',
+        SHEET_ROWS: 'https://open.feishu.cn/open-apis/sheets/v3/spreadsheets/{spreadsheetToken}/sheets/{sheetId}/rows'
+    }
 };
+
+// 缓存访问令牌
+let accessTokenCache = null;
+let tokenExpiry = 0;
 
 // 获取飞书访问令牌
 async function getFeishuAccessToken() {
     try {
+        // 检查令牌是否有效
+        const now = Date.now();
+        if (accessTokenCache && now < tokenExpiry) {
+            console.log('使用缓存的飞书访问令牌');
+            return accessTokenCache;
+        }
+        
         // 实际环境中，应该调用飞书API获取访问令牌
         // 这里使用模拟数据
         console.log('获取飞书访问令牌...');
-        return 'mock_access_token_123456';
+        accessTokenCache = 'mock_access_token_123456';
+        tokenExpiry = now + (2 * 60 * 60 * 1000); // 2小时有效期
+        return accessTokenCache;
         
         // 真实API调用示例（需要替换为实际的API调用）
         /*
-        const response = await fetch('https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal', {
+        const response = await fetch(FEISHU_CONFIG.API_ENDPOINTS.ACCESS_TOKEN, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -1041,8 +1122,18 @@ async function getFeishuAccessToken() {
             })
         });
         
+        if (!response.ok) {
+            throw new Error(`API调用失败: ${response.status}`);
+        }
+        
         const data = await response.json();
-        return data.tenant_access_token;
+        if (data.code !== 0) {
+            throw new Error(`获取令牌失败: ${data.msg}`);
+        }
+        
+        accessTokenCache = data.tenant_access_token;
+        tokenExpiry = now + (data.expire * 1000);
+        return accessTokenCache;
         */
     } catch (error) {
         console.error('获取飞书访问令牌失败:', error);
@@ -1051,16 +1142,25 @@ async function getFeishuAccessToken() {
 }
 
 // 向飞书多维表格添加行数据
-async function addFeishuSheetRow(accessToken, rowData) {
+async function addFeishuSheetRow(sheetId, rowData) {
     try {
+        const accessToken = await getFeishuAccessToken();
+        
         // 实际环境中，应该调用飞书API添加行数据
         // 这里使用模拟数据
-        console.log('向飞书多维表格添加数据:', rowData);
+        console.log('向飞书多维表格添加数据:', {
+            sheetId,
+            rowData
+        });
         return true;
         
         // 真实API调用示例（需要替换为实际的API调用）
         /*
-        const response = await fetch(`https://open.feishu.cn/open-apis/sheets/v3/spreadsheets/${FEISHU_CONFIG.SPREADSHEET_TOKEN}/sheets/${FEISHU_CONFIG.SHEET_ID}/rows`, {
+        const url = FEISHU_CONFIG.API_ENDPOINTS.SHEET_ROWS
+            .replace('{spreadsheetToken}', FEISHU_CONFIG.SPREADSHEET_TOKEN)
+            .replace('{sheetId}', sheetId);
+        
+        const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -1075,6 +1175,10 @@ async function addFeishuSheetRow(accessToken, rowData) {
             })
         });
         
+        if (!response.ok) {
+            throw new Error(`API调用失败: ${response.status}`);
+        }
+        
         const data = await response.json();
         return data.code === 0;
         */
@@ -1082,6 +1186,413 @@ async function addFeishuSheetRow(accessToken, rowData) {
         console.error('向飞书多维表格添加数据失败:', error);
         throw error;
     }
+}
+
+// 从飞书多维表格获取数据
+async function getFeishuSheetData(sheetId) {
+    try {
+        const accessToken = await getFeishuAccessToken();
+        
+        // 实际环境中，应该调用飞书API获取数据
+        // 这里使用模拟数据
+        console.log('从飞书多维表格获取数据:', sheetId);
+        return {
+            code: 0,
+            data: {
+                items: []
+            }
+        };
+        
+        // 真实API调用示例（需要替换为实际的API调用）
+        /*
+        const url = FEISHU_CONFIG.API_ENDPOINTS.SHEET_ROWS
+            .replace('{spreadsheetToken}', FEISHU_CONFIG.SPREADSHEET_TOKEN)
+            .replace('{sheetId}', sheetId);
+        
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`API调用失败: ${response.status}`);
+        }
+        
+        return await response.json();
+        */
+    } catch (error) {
+        console.error('从飞书多维表格获取数据失败:', error);
+        throw error;
+    }
+}
+
+// 同步产品数据到飞书
+async function syncProductsToFeishu() {
+    try {
+        console.log('开始同步产品数据到飞书...');
+        
+        for (const product of products) {
+            const rowData = {
+                '商品ID': product.id,
+                '商品名称': product.name,
+                '品牌': product.brand,
+                '描述': product.description,
+                'SPADE积分': product.spadePoints,
+                '库存': product.stock,
+                '图片路径': product.imageUrl,
+                '分类': product.category,
+                '热度': product.popularity,
+                '创建时间': new Date(product.createdAt).toLocaleString('zh-CN')
+            };
+            
+            await addFeishuSheetRow(FEISHU_CONFIG.SHEETS.PRODUCTS, rowData);
+            console.log(`同步产品: ${product.name} 成功`);
+        }
+        
+        console.log('产品数据同步完成');
+        return true;
+    } catch (error) {
+        console.error('同步产品数据失败:', error);
+        throw error;
+    }
+}
+
+// 同步用户数据到飞书
+async function syncUsersToFeishu() {
+    try {
+        console.log('开始同步用户数据到飞书...');
+        
+        for (const user of users) {
+            const rowData = {
+                '用户ID': user.id,
+                '用户名': user.name,
+                '邮箱': user.email,
+                'XDE ID': user.xdeId,
+                'SPADE积分': user.spadePoints,
+                '是否完成培训': user.completedTraining ? '是' : '否',
+                '部门': user.profile.department,
+                '职位': user.profile.position,
+                '入职日期': new Date(user.profile.joinDate).toLocaleString('zh-CN'),
+                '培训完成度': user.profile.trainingCompleted + '%',
+                '当前等级': user.profile.currentLevel,
+                '创建时间': new Date(user.createdAt).toLocaleString('zh-CN')
+            };
+            
+            await addFeishuSheetRow(FEISHU_CONFIG.SHEETS.USERS, rowData);
+            console.log(`同步用户: ${user.name} 成功`);
+        }
+        
+        console.log('用户数据同步完成');
+        return true;
+    } catch (error) {
+        console.error('同步用户数据失败:', error);
+        throw error;
+    }
+}
+
+// 导出数据到飞书
+async function exportDataToFeishu(dataType) {
+    try {
+        switch (dataType) {
+            case 'products':
+                return await syncProductsToFeishu();
+            case 'users':
+                return await syncUsersToFeishu();
+            case 'all':
+                await syncProductsToFeishu();
+                await syncUsersToFeishu();
+                return true;
+            default:
+                throw new Error('不支持的数据类型');
+        }
+    } catch (error) {
+        console.error('导出数据失败:', error);
+        throw error;
+    }
+}
+
+// 从飞书导入数据
+async function importDataFromFeishu(dataType) {
+    try {
+        console.log(`从飞书导入${dataType}数据...`);
+        
+        let sheetId;
+        switch (dataType) {
+            case 'products':
+                sheetId = FEISHU_CONFIG.SHEETS.PRODUCTS;
+                break;
+            case 'users':
+                sheetId = FEISHU_CONFIG.SHEETS.USERS;
+                break;
+            case 'rewards':
+                sheetId = FEISHU_CONFIG.SHEETS.REWARDS;
+                break;
+            default:
+                throw new Error('不支持的数据类型');
+        }
+        
+        const result = await getFeishuSheetData(sheetId);
+        console.log(`导入${dataType}数据完成，共${result.data.items.length}条`);
+        return result;
+    } catch (error) {
+        console.error('导入数据失败:', error);
+        throw error;
+    }
+}
+
+// 货币奖励管理功能
+
+// 发放货币奖励
+async function createMonetaryReward(rewardData) {
+    try {
+        console.log('创建货币奖励:', rewardData);
+        
+        // 生成奖励ID
+        const rewardId = 'reward-' + Date.now();
+        
+        // 创建奖励对象
+        const newReward = {
+            id: rewardId,
+            userId: rewardData.userId,
+            userName: rewardData.userName,
+            amount: rewardData.amount,
+            currency: rewardData.currency || 'CNY',
+            type: rewardData.type || 'cash',
+            reason: rewardData.reason,
+            status: REWARD_STATUS.PENDING,
+            createdAt: new Date().toISOString(),
+            approvedAt: null,
+            paidAt: null,
+            approver: null
+        };
+        
+        // 添加到奖励列表
+        monetaryRewards.push(newReward);
+        
+        // 同步到飞书
+        await addFeishuSheetRow(FEISHU_CONFIG.SHEETS.REWARDS, {
+            '奖励ID': newReward.id,
+            '用户ID': newReward.userId,
+            '用户名': newReward.userName,
+            '金额': newReward.amount,
+            '货币': newReward.currency,
+            '类型': newReward.type,
+            '原因': newReward.reason,
+            '状态': newReward.status,
+            '创建时间': new Date(newReward.createdAt).toLocaleString('zh-CN'),
+            '审批时间': '',
+            '支付时间': '',
+            '审批人': ''
+        });
+        
+        console.log('货币奖励创建成功:', rewardId);
+        return newReward;
+    } catch (error) {
+        console.error('创建货币奖励失败:', error);
+        throw error;
+    }
+}
+
+// 审批货币奖励
+async function approveMonetaryReward(rewardId, approverName) {
+    try {
+        const reward = monetaryRewards.find(r => r.id === rewardId);
+        if (!reward) {
+            throw new Error('奖励不存在');
+        }
+        
+        if (reward.status !== REWARD_STATUS.PENDING) {
+            throw new Error('奖励状态不正确');
+        }
+        
+        // 更新状态
+        reward.status = REWARD_STATUS.APPROVED;
+        reward.approvedAt = new Date().toISOString();
+        reward.approver = approverName;
+        
+        // 同步到飞书
+        await addFeishuSheetRow(FEISHU_CONFIG.SHEETS.REWARDS, {
+            '奖励ID': reward.id,
+            '用户ID': reward.userId,
+            '用户名': reward.userName,
+            '金额': reward.amount,
+            '货币': reward.currency,
+            '类型': reward.type,
+            '原因': reward.reason,
+            '状态': reward.status,
+            '创建时间': new Date(reward.createdAt).toLocaleString('zh-CN'),
+            '审批时间': new Date(reward.approvedAt).toLocaleString('zh-CN'),
+            '支付时间': '',
+            '审批人': reward.approver
+        });
+        
+        console.log('货币奖励审批成功:', rewardId);
+        return reward;
+    } catch (error) {
+        console.error('审批货币奖励失败:', error);
+        throw error;
+    }
+}
+
+// 支付货币奖励
+async function payMonetaryReward(rewardId) {
+    try {
+        const reward = monetaryRewards.find(r => r.id === rewardId);
+        if (!reward) {
+            throw new Error('奖励不存在');
+        }
+        
+        if (reward.status !== REWARD_STATUS.APPROVED) {
+            throw new Error('奖励状态不正确');
+        }
+        
+        // 更新状态
+        reward.status = REWARD_STATUS.PAID;
+        reward.paidAt = new Date().toISOString();
+        
+        // 同步到飞书
+        await addFeishuSheetRow(FEISHU_CONFIG.SHEETS.REWARDS, {
+            '奖励ID': reward.id,
+            '用户ID': reward.userId,
+            '用户名': reward.userName,
+            '金额': reward.amount,
+            '货币': reward.currency,
+            '类型': reward.type,
+            '原因': reward.reason,
+            '状态': reward.status,
+            '创建时间': new Date(reward.createdAt).toLocaleString('zh-CN'),
+            '审批时间': new Date(reward.approvedAt).toLocaleString('zh-CN'),
+            '支付时间': new Date(reward.paidAt).toLocaleString('zh-CN'),
+            '审批人': reward.approver
+        });
+        
+        console.log('货币奖励支付成功:', rewardId);
+        return reward;
+    } catch (error) {
+        console.error('支付货币奖励失败:', error);
+        throw error;
+    }
+}
+
+// 取消货币奖励
+async function cancelMonetaryReward(rewardId) {
+    try {
+        const reward = monetaryRewards.find(r => r.id === rewardId);
+        if (!reward) {
+            throw new Error('奖励不存在');
+        }
+        
+        if (reward.status === REWARD_STATUS.PAID) {
+            throw new Error('已支付的奖励无法取消');
+        }
+        
+        // 更新状态
+        reward.status = REWARD_STATUS.CANCELLED;
+        
+        // 同步到飞书
+        await addFeishuSheetRow(FEISHU_CONFIG.SHEETS.REWARDS, {
+            '奖励ID': reward.id,
+            '用户ID': reward.userId,
+            '用户名': reward.userName,
+            '金额': reward.amount,
+            '货币': reward.currency,
+            '类型': reward.type,
+            '原因': reward.reason,
+            '状态': reward.status,
+            '创建时间': new Date(reward.createdAt).toLocaleString('zh-CN'),
+            '审批时间': reward.approvedAt ? new Date(reward.approvedAt).toLocaleString('zh-CN') : '',
+            '支付时间': '',
+            '审批人': reward.approver
+        });
+        
+        console.log('货币奖励取消成功:', rewardId);
+        return reward;
+    } catch (error) {
+        console.error('取消货币奖励失败:', error);
+        throw error;
+    }
+}
+
+// 生成货币奖励管理界面
+function generateMonetaryRewardsContent() {
+    const rewardsContent = document.querySelector('.monetary-rewards-content');
+    if (!rewardsContent) return;
+    
+    rewardsContent.innerHTML = '';
+    
+    // 按状态分组显示奖励
+    const rewardsByStatus = {
+        pending: monetaryRewards.filter(r => r.status === REWARD_STATUS.PENDING),
+        approved: monetaryRewards.filter(r => r.status === REWARD_STATUS.APPROVED),
+        paid: monetaryRewards.filter(r => r.status === REWARD_STATUS.PAID),
+        cancelled: monetaryRewards.filter(r => r.status === REWARD_STATUS.CANCELLED)
+    };
+    
+    // 生成状态分组
+    Object.entries(rewardsByStatus).forEach(([status, statusRewards]) => {
+        if (statusRewards.length === 0) return;
+        
+        const statusSection = document.createElement('div');
+        statusSection.className = `rewards-section status-${status}`;
+        
+        const statusTitle = document.createElement('h4');
+        statusTitle.textContent = getStatusDisplayName(status);
+        statusSection.appendChild(statusTitle);
+        
+        const rewardsList = document.createElement('div');
+        rewardsList.className = 'rewards-list';
+        
+        statusRewards.forEach(reward => {
+            const rewardCard = document.createElement('div');
+            rewardCard.className = 'reward-card';
+            
+            rewardCard.innerHTML = `
+                <div class="reward-card-header">
+                    <h5>${reward.userName}</h5>
+                    <span class="reward-amount">${reward.currency} ${reward.amount}</span>
+                </div>
+                <div class="reward-card-content">
+                    <p class="reward-reason">${reward.reason}</p>
+                    <div class="reward-meta">
+                        <span>类型: ${reward.type === 'cash' ? '现金' : '礼品卡'}</span>
+                        <span>创建时间: ${new Date(reward.createdAt).toLocaleString('zh-CN')}</span>
+                        ${reward.approvedAt ? `<span>审批时间: ${new Date(reward.approvedAt).toLocaleString('zh-CN')}</span>` : ''}
+                        ${reward.paidAt ? `<span>支付时间: ${new Date(reward.paidAt).toLocaleString('zh-CN')}</span>` : ''}
+                        ${reward.approver ? `<span>审批人: ${reward.approver}</span>` : ''}
+                    </div>
+                </div>
+                <div class="reward-card-actions">
+                    ${reward.status === REWARD_STATUS.PENDING ? `
+                        <button class="btn btn-primary" onclick="approveMonetaryReward('${reward.id}', 'Admin')">审批</button>
+                        <button class="btn btn-danger" onclick="cancelMonetaryReward('${reward.id}')">取消</button>
+                    ` : ''}
+                    ${reward.status === REWARD_STATUS.APPROVED ? `
+                        <button class="btn btn-success" onclick="payMonetaryReward('${reward.id}')">支付</button>
+                        <button class="btn btn-danger" onclick="cancelMonetaryReward('${reward.id}')">取消</button>
+                    ` : ''}
+                </div>
+            `;
+            
+            rewardsList.appendChild(rewardCard);
+        });
+        
+        statusSection.appendChild(rewardsList);
+        rewardsContent.appendChild(statusSection);
+    });
+}
+
+// 获取状态显示名称
+function getStatusDisplayName(status) {
+    const statusMap = {
+        pending: '待审批',
+        approved: '已审批',
+        paid: '已支付',
+        cancelled: '已取消',
+        rejected: '已拒绝'
+    };
+    return statusMap[status] || status;
 }
 
 // 兑换产品函数
@@ -1123,8 +1634,7 @@ async function redeemProduct(productId, userSpadePoints = currentUser.spadePoint
         redeemInfo.pointsAfter = userSpadePoints - product.spadePoints;
         
         // 调用飞书多维表格API提交数据
-        const accessToken = await getFeishuAccessToken();
-        const success = await addFeishuSheetRow(accessToken, {
+        const success = await addFeishuSheetRow(FEISHU_CONFIG.SHEETS.REDEMPTION, {
             '用户ID': redeemInfo.userId,
             '用户名': redeemInfo.userName,
             '邮箱': redeemInfo.userEmail,
@@ -1134,7 +1644,9 @@ async function redeemProduct(productId, userSpadePoints = currentUser.spadePoint
             '消耗积分': redeemInfo.pointsSpent,
             '兑换时间': new Date(redeemInfo.redeemTime).toLocaleString('zh-CN'),
             '库存变化': `${redeemInfo.stockBefore} → ${redeemInfo.stockAfter}`,
-            '积分变化': `${redeemInfo.pointsBefore} → ${redeemInfo.pointsAfter}`
+            '积分变化': `${redeemInfo.pointsBefore} → ${redeemInfo.pointsAfter}`,
+            '状态': '已完成',
+            '处理人': '系统自动'
         });
         
         if (success) {
@@ -1339,5 +1851,367 @@ document.addEventListener('DOMContentLoaded', function() {
                 navbar.classList.remove('scrolled');
             }
         }
+        
+        // 滚动进度条
+        const scrollProgress = document.getElementById('scrollProgress');
+        if (scrollProgress) {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            scrollProgress.style.width = scrolled + '%';
+        }
     });
+    
+    // 生成兑换内容
+    if (typeof generateRedeemContent === 'function') {
+        generateRedeemContent();
+    }
+    
+    // 生成个人资料内容
+    if (typeof generateProfileContent === 'function') {
+        generateProfileContent();
+    }
+    
+    // 生成货币奖励内容
+    if (typeof generateMonetaryRewardsContent === 'function') {
+        generateMonetaryRewardsContent();
+    }
+    
+    // 初始化数据可视化
+    initDataVisualization();
+    
+    // 初始化管理后台
+    if (typeof initAdminDashboard === 'function') {
+        initAdminDashboard();
+    }
+    
+    // 显示页面
+    document.body.style.opacity = '1';
 });
+
+// 初始化数据可视化
+function initDataVisualization() {
+    setTimeout(() => {
+        createPointsChart();
+        createRedemptionChart();
+        createRewardsChart();
+        createUserActivityChart();
+    }, 1000); // 延迟初始化，确保DOM元素已加载
+}
+
+// 创建积分分布图表
+function createPointsChart() {
+    const ctx = document.getElementById('pointsChart');
+    if (!ctx) return;
+    
+    // 准备数据
+    const userPoints = users.map(user => ({
+        name: user.name,
+        spadePoints: user.spadePoints,
+        xdePoints: user.xdePoints || 0
+    }));
+    
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: userPoints.map(u => u.name),
+            datasets: [
+                {
+                    label: 'SPADE Points',
+                    data: userPoints.map(u => u.spadePoints),
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'XDE Points',
+                    data: userPoints.map(u => u.xdePoints),
+                    backgroundColor: 'rgba(153, 102, 255, 0.6)',
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'User Points Distribution',
+                    font: {
+                        size: 16
+                    }
+                },
+                legend: {
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Points'
+                    }
+                }
+            }
+        }
+    });
+}
+
+// 创建兑换记录图表
+function createRedemptionChart() {
+    const ctx = document.getElementById('redemptionChart');
+    if (!ctx) return;
+    
+    // 准备数据
+    const productRedemptions = {};
+    orders.forEach(order => {
+        if (!productRedemptions[order.productName]) {
+            productRedemptions[order.productName] = 0;
+        }
+        productRedemptions[order.productName]++;
+    });
+    
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(productRedemptions),
+            datasets: [{
+                data: Object.values(productRedemptions),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 159, 64, 0.6)',
+                    'rgba(199, 199, 199, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(199, 199, 199, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Product Redemption Distribution',
+                    font: {
+                        size: 16
+                    }
+                },
+                legend: {
+                    position: 'right'
+                }
+            }
+        }
+    });
+}
+
+// 创建奖励统计图表
+function createRewardsChart() {
+    const ctx = document.getElementById('rewardsChart');
+    if (!ctx) return;
+    
+    // 准备数据
+    const rewardsByStatus = {
+        pending: monetaryRewards.filter(r => r.status === REWARD_STATUS.PENDING).length,
+        approved: monetaryRewards.filter(r => r.status === REWARD_STATUS.APPROVED).length,
+        paid: monetaryRewards.filter(r => r.status === REWARD_STATUS.PAID).length,
+        cancelled: monetaryRewards.filter(r => r.status === REWARD_STATUS.CANCELLED).length
+    };
+    
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Pending', 'Approved', 'Paid', 'Cancelled'],
+            datasets: [{
+                data: Object.values(rewardsByStatus),
+                backgroundColor: [
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(255, 99, 132, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 99, 132, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Rewards Status Distribution',
+                    font: {
+                        size: 16
+                    }
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+}
+
+// 创建用户活动图表
+function createUserActivityChart() {
+    const ctx = document.getElementById('userActivityChart');
+    if (!ctx) return;
+    
+    // 准备数据
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+    const redemptionData = [5, 8, 12, 7, 15, 10];
+    const rewardData = [2, 4, 3, 5, 7, 6];
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: months,
+            datasets: [
+                {
+                    label: 'Redemptions',
+                    data: redemptionData,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    label: 'Rewards',
+                    data: rewardData,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Monthly Activity Trend',
+                    font: {
+                        size: 16
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Count'
+                    }
+                }
+            }
+        }
+    });
+}
+
+// 计算用户积分
+function calculateUserPoints(userId, activityData) {
+    try {
+        const user = users.find(u => u.id === userId);
+        if (!user) {
+            throw new Error('用户不存在');
+        }
+        
+        // 基础积分
+        let basePoints = 0;
+        
+        // 根据培训完成度计算积分
+        if (activityData.trainingCompleted) {
+            basePoints += activityData.trainingCompleted * 0.5;
+        }
+        
+        // 根据贡献度计算积分
+        if (activityData.contribution) {
+            basePoints += activityData.contribution * 2;
+        }
+        
+        // 根据参与度计算积分
+        if (activityData.participation) {
+            basePoints += activityData.participation * 1;
+        }
+        
+        // 计算总积分
+        const totalPoints = Math.round(basePoints);
+        
+        // 更新用户积分
+        user.spadePoints += totalPoints;
+        if (!user.xdePoints) user.xdePoints = 0;
+        user.xdePoints += totalPoints;
+        
+        console.log(`用户 ${user.name} 获得 ${totalPoints} 积分`);
+        return totalPoints;
+    } catch (error) {
+        console.error('计算用户积分失败:', error);
+        throw error;
+    }
+}
+
+// 发放积分
+async function awardPoints(userId, points, reason) {
+    try {
+        const user = users.find(u => u.id === userId);
+        if (!user) {
+            throw new Error('用户不存在');
+        }
+        
+        // 更新用户积分
+        user.spadePoints += points;
+        if (!user.xdePoints) user.xdePoints = 0;
+        user.xdePoints += points;
+        
+        // 创建积分记录
+        const pointsRecord = {
+            id: 'points-' + Date.now(),
+            userId: user.id,
+            userName: user.name,
+            points: points,
+            reason: reason,
+            type: 'award',
+            createdAt: new Date().toISOString()
+        };
+        
+        // 同步到飞书
+        await addFeishuSheetRow(FEISHU_CONFIG.SHEETS.REWARDS, {
+            '记录ID': pointsRecord.id,
+            '用户ID': pointsRecord.userId,
+            '用户名': pointsRecord.userName,
+            '积分': pointsRecord.points,
+            '原因': pointsRecord.reason,
+            '类型': '积分奖励',
+            '创建时间': new Date(pointsRecord.createdAt).toLocaleString('zh-CN')
+        });
+        
+        console.log(`成功给用户 ${user.name} 发放 ${points} 积分`);
+        return pointsRecord;
+    } catch (error) {
+        console.error('发放积分失败:', error);
+        throw error;
+    }
+}
